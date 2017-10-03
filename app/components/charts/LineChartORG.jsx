@@ -1,30 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import resizeMixin from './utils/ReactMixins.js';
-import scalee from './utils/scale';
+var Axis=React.createClass({
+    propTypes: {
+        h:React.PropTypes.number,
+        axis:React.PropTypes.func,
+        axisType:React.PropTypes.oneOf(['x','y'])
 
+    },
 
-class Axis extends React.Component {
-
-   static  propTypes = {
-        h:PropTypes.number,
-        axis:PropTypes.func,
-        axisType:PropTypes.oneOf(['x','y'])
-
-    }
-// test  dfgdfgdfgdf
-    componentDidUpdate () { this.renderAxis(); }
-    
-    componentDidMount () { this.renderAxis(); }
-
-    renderAxis  () {
+    componentDidUpdate: function () { this.renderAxis(); },
+    componentDidMount: function () { this.renderAxis(); },
+    renderAxis: function () {
         var node = ReactDOM.findDOMNode(this);
         d3.select(node).call(this.props.axis);
 
-    }                                                   
-
-    render () {
+    },
+    render: function () {
 
             var translate = "translate(0,"+(this.props.h)+")";
 
@@ -34,23 +23,23 @@ class Axis extends React.Component {
             );
         }
 
-}
+    });
 
-class Grid extends React.Component{
-    static propTypes = {
-        h:PropTypes.number,
-        grid:PropTypes.func,
-        gridType:PropTypes.oneOf(['x','y'])
-    }
+var Grid=React.createClass({
+    propTypes: {
+        h:React.PropTypes.number,
+        grid:React.PropTypes.func,
+        gridType:React.PropTypes.oneOf(['x','y'])
+    },
 
-    componentDidUpdate () { this.renderGrid(); }
-    componentDidMount () { this.renderGrid(); }
-    renderGrid () {
+    componentDidUpdate: function () { this.renderGrid(); },
+    componentDidMount: function () { this.renderGrid(); },
+    renderGrid: function () {
         var node = ReactDOM.findDOMNode(this);
         d3.select(node).call(this.props.grid);
 
-    }
-    render () {
+    },
+    render: function () {
         var translate = "translate(0,"+(this.props.h)+")";
         return (
             <g className="y-grid" transform={this.props.gridType=='x'?translate:""}>
@@ -58,13 +47,13 @@ class Grid extends React.Component{
         );
     }
 
-}
+});
 
-class ToolTip extends React.Component{
-    static propTypes = {
-        tooltip:PropTypes.object
-    } 
-    render (){
+var ToolTip=React.createClass({
+    propTypes: {
+        tooltip:React.PropTypes.object
+    },
+    render:function(){
 
         var visibility="hidden";
         var transform="";
@@ -110,16 +99,16 @@ class ToolTip extends React.Component{
             </g>
         );
     }
-}
+});
 
-class Dots extends React.Component{
-    static propTypes = {
-        data:PropTypes.array,
-        x:PropTypes.func,
-        y:PropTypes.func
+var Dots=React.createClass({
+    propTypes: {
+        data:React.PropTypes.array,
+        x:React.PropTypes.func,
+        y:React.PropTypes.func
 
-    } 
-    render (){
+    },
+    render:function(){
 
         var _self=this;
 
@@ -141,36 +130,33 @@ class Dots extends React.Component{
             </g>
         );
     }
-}
+});
 
 
-/* to do ***/
-class  LineChart extends React.Component{
+var LineChart=React.createClass({
 
-   static  propTypes = {
-        width:PropTypes.number,
-        height:PropTypes.number,
-        chartId:PropTypes.string
-    }
+    propTypes: {
+        width:React.PropTypes.number,
+        height:React.PropTypes.number,
+        chartId:React.PropTypes.string
+    },
 
-    mixins = [resizeMixin];
+    mixins:[resizeMixin],
 
-    static defaultProps =  {
-        
+    getDefaultProps: function() {
+        return {
             width: 800,
             height: 300,
             chartId: 'v1_chart'
-       
-    }
-
-
-   state = {
-       
+        };
+    },
+    getInitialState:function(){
+        return {
             tooltip:{ display:false,data:{key:'',value:''}},
-            width:this.props.width
-     
-    }
-    render () {
+            width:0
+        };
+    },
+    render:function(){
         var data=[
             {day:'02-11-2016',count:180},
             {day:'02-12-2016',count:250},
@@ -198,9 +184,7 @@ class  LineChart extends React.Component{
             }))
             .rangeRound([0, w]);
 
-        var x1=scalee();   ;
-
-       var y = d3.scale.linear()
+        var y = d3.scale.linear()
             .domain([0,d3.max(data,function(d){
                 return d.count+100;
             })])
@@ -280,8 +264,8 @@ class  LineChart extends React.Component{
 
             </div>
         );
-    }
-    showToolTip (e) {
+    },
+    showToolTip:function(e){
         e.target.setAttribute('fill', '#FFFFFF');
 
         this.setState({tooltip:{
@@ -297,19 +281,13 @@ class  LineChart extends React.Component{
 
             }
         });
-    }
-
-    hideToolTip (e) {
+    },
+    hideToolTip:function(e){
         e.target.setAttribute('fill', '#7dc7f4');
         this.setState({tooltip:{ display:false,data:{key:'',value:''}}});
     }
 
 
-}
+});
 
 window.LineChart=LineChart;
-
-
-export {Axis,Grid,ToolTip,Dots,LineChart}
-
-

@@ -42,5 +42,5 @@ var resizeMixin={
         }
     }
 };
-
+export {resizeMixin}
 window.resizeMixin=resizeMixin;
